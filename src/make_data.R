@@ -32,8 +32,6 @@
 #' require(pbapply)
 #' sim_list <- pbreplicate(n = 5, expr = make_data(100, 0.2, 0.1, seq(.6, 1, .05),
 #' seq(.6, 1, .05)), simplify = FALSE)
-#' @export
-#' @importFrom stats rnorm rbinom rbeta
 make_data <- function(n_obs,
                       Pr = NULL,
                       inc = NULL,
