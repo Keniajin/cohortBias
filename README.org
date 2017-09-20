@@ -17,7 +17,7 @@ Epidemiological Studies.
   - Se from 0.6 to 1.0, increasing by 0.05,
   - Sp from 0.6 to 1.0, increasing by 0.05;
 - For the following disease characteristics:
-  - prevalence of 5, 15, 25, and 50%,
+  - prevalence of 5, 20, and 50%,
   - incidence of 0.01, 0.05 and 0.1/animal-time /t/,
   - i.e. 12 different contexts according to prevalence and incidence of disease;
 - For each of these 12 contexts, simulate 1,000 cohort studies, of 1,000
