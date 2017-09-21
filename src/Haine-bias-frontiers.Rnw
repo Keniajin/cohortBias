@@ -98,24 +98,26 @@ QC, Canada}
 
 %%% Leave the Abstract empty if your article does not require one, please see the Summary Table for full details.
   \section{}
-  Using imperfect tests may lead to biased estimates of disease frequency.
+  Using imperfect tests may lead to biased estimates of disease frequency and on
+  measures of association.
   Many studies have looked into the effect of misclassification into statistical
   inferences.
   These evaluations were either within a cross-sectional study framework,
   assessing biased prevalence, or for cohort study designs, evaluating biased
   incidence rate or relative risk estimates based on misclassification at one of
-  the two time-points of follow-up.
+  the two time-points (initial assessment or follow-up).
   However, both observations at risk and incident cases can be wrongly
   identified in longitudinal studies, leading to selection and misclassification
   biases, respectively.
-  The objective of this study was to evaluate the relative impact of selection
+  The objective of this paper is to evaluate the relative impact of selection
   and misclassification biases resulting from misclassification, together, on
   measures of incidence.
 
-  Data sets from a hypothetical cohort study with two samples collected one
-  month apart were simulated and analyzed based on specific test and disease
-  characteristics, for a stable population over the follow-up time, and with no
-  elimination of disease or clustering of observations.
+  To investigate impact on measure of disease frequency, data sets from a
+  hypothetical cohort study with two samples collected one month apart were
+  simulated and analyzed based on specific test and disease characteristics, for
+  a stable population over the follow-up time, and with no elimination of
+  disease or clustering of observations.
   Direction and magnitude of bias due to selection, misclassification, and total
   bias was assessed for diagnostic test sensitivity and specificity ranging from
   0.6 to 1.0, and for specific disease contexts, i.e.\ disease prevalences of 5,
@@ -124,12 +126,15 @@ QC, Canada}
   were simulated for these nine disease contexts where the same diagnostic test
   is used to identify observations at risk at beginning of the cohort and
   incident cases at its end.
-
+  Already published results obtained in a similar fashion were used for
+  investigating impact of biases on measure of association between exposure and
+  disease.
+  
   Our results indicated that the departure of the estimate of disease incidence
-  from its true value is a function of test specificity, and disease prevalence
-  and incidence.
-  Imperfect sensitivity to identify observations at risk and imperfect
-  specificity to identify incident cases lead to under-estimation of the
+  from its true value is mainly a function of test specificity, and disease
+  prevalence and incidence.
+  Imperfect sensitivity to identify individuals at risk and imperfect
+  specificity to identify incident cases lead to a mild under-estimation of the
   observed disease incidence.
   The combination of the two biases, at baseline and follow-up, revealed the
   importance of a good to excellent specificity over sensitivity for the
@@ -149,8 +154,8 @@ QC, Canada}
 % As a primary goal, the abstract should render the general significance and conceptual advance of the work clearly accessible to a broad readership. References should not be cited in the abstract. Leave the Abstract empty if your article does not require one, please see \href{http://www.frontiersin.org/about/AuthorGuidelines#SummaryTable}{Summary Table} for details according to article type. 
 
 \tiny
- \keyFont{ \section{Keywords:} misclassification, selection bias, bias (epidemiology),
-   longitudinal study} %All article types: you may provide up to 8 keywords; at least 5 are mandatory.
+ \keyFont{ \section{Keywords:} bias (epidemiology), longitudinal study,
+   selection bias, misclassification} %All article types: you may provide up to 8 keywords; at least 5 are mandatory.
 \end{abstract}
 
 <<setup1,echo=FALSE>>=
