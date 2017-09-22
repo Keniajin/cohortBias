@@ -45,10 +45,12 @@ make_data <- function(n_obs,
                       RR_inc = 3,
                       se = NULL,
                       sp = NULL) {
-    if(is.null(Pr) | is.null(inc) | is.null(se) | is.null(sp))
+    if(is.null(Pr) | is.null(b0_inc) | is.null(RR_inc) | is.null(se) | is.null(sp))
         stop('Missing argument(s)')
     if((Pr < 0.01) | (Pr > 0.9))
         stop('Prevalence should be between 0 and 1')
+    if(RR_inc < 0)
+        stop('RR should be > 0')
     if(is.null(se))
         stop('Missing Se.')
     if(is.null(sp))
