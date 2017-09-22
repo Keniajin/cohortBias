@@ -2,21 +2,21 @@ source("make_data.R")
 sim_list <- vector("list", 100)
 set.seed(123)
 require(pbapply)
-sim_list <- pbreplicate(n = 100, expr = make_data(1000, 0.2, 0.1,
-                                                  c(seq(.6, .95, .05), .98, .99, 1),
-                                                  c(seq(.6, .95, .05), .98, .99, 1)),
+sim_list <- pbreplicate(n = 100, expr = make_data(500, 0.2, 0.5, -3.625, 3,
+                                                  seq(.7, 1, .05),
+                                                  seq(.7, 1, .05)),
                         simplify = FALSE)
 
 source("compute_risk.R")
 
-se <- c(seq(.6, .95, .05), .98, .99, 1)
-sp <- c(seq(.6, .95, .05), .98, .99, 1)
+se <- seq(.7, 1, .05)
+sp <- seq(.7, 1, .05)
 se_sp <- expand.grid(se, sp)
 col_names <- paste(se_sp[, 1], se_sp[, 2], sep = "_")
 
 source("compute_Rstar.R")
 
-R_star <- compute_Rstar(sim_list, col_names, 100)
+R_star <- compute_Rstar(sim_list, col_names, 1)
 
 R <- sapply(sim_list, function(x) compute_risk(x, "S1", "S2"))
 
@@ -39,6 +39,22 @@ library(stringr)
 ids <- rownames(total_bias)
 ids <- str_sub(ids, start = 7)
 total_bias <- cbind(total_bias, colsplit(ids, '_', names = c("Se", "Sp")))
+
+############
+source("compute_RR.R")
+source("compute_RRstar.R")
+RR_star <- compute_RRstar(sim_list, col_names, 100)
+
+fastbind.ith.rows <- function(i) rbindlist(lapply(RR_star, "[", i, TRUE))
+fastbound_RR <- lapply(1:3, fastbind.ith.rows)
+names(fastbound_RR) <- c("Total bias", "Selection bias", "Misclassification bias")
+
+total_bias_RR <- t(apply(fastbound_RR[[1]], 2, function(x) quantile(x, c(.025, .5, .0975))))
+colnames(total_bias_RR) <- c("q2.5", "q50", "q97.5")
+ids <- rownames(total_bias_RR)
+ids <- str_sub(ids, start = 7)
+total_bias_RR <- cbind(total_bias_RR, colsplit(ids, '_', names = c("Se", "Sp")))
+
 
 #library(reshape2)
 #t <- melt(fastbound[[1]])
@@ -68,7 +84,7 @@ total_bias <- cbind(total_bias, colsplit(ids, '_', names = c("Se", "Sp")))
 
 library(ggplot2)
 library(directlabels)
-p <- ggplot(total_bias, aes(x = Se, y = Sp, z = q50)) +
+p <- ggplot(total_bias_RR, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
     scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
