@@ -31,7 +31,7 @@ col_names <- paste(se_sp[, 1], se_sp[, 2], sep = "_")
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_20_10")
+save(R_star, RR_star, file = "R_star_20_10.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -47,7 +47,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.2, 0.5, -5.25, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_20_01")
+save(R_star, RR_star, file = "R_star_20_01.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -63,7 +63,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.2, 0.5, -3.625, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_20_05")
+save(R_star, RR_star, file = "R_star_20_05.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -79,7 +79,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.05, 0.5, -2.85, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_05_10")
+save(R_star, RR_star, file = "R_star_05_10.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -95,7 +95,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.05, 0.5, -3.625, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_05_05")
+save(R_star, RR_star, file = "R_star_05_05.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -111,7 +111,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.05, 0.5, -5.25, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_05_01")
+save(R_star, RR_star, file = "R_star_05_01.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -127,7 +127,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.5, 0.5, -2.85, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_50_10")
+save(R_star, RR_star, file = "R_star_50_10.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -143,7 +143,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.5, 0.5, -3.625, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_50_05")
+save(R_star, RR_star, file = "R_star_50_05.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
@@ -159,7 +159,7 @@ sim_list <- pbreplicate(n = 1000, expr = make_data(1000, 0.5, 0.5, -5.25, 3,
 R_star <- compute_Rstar(sim_list, col_names, 1000)
 RR_star <- compute_RRstar(sim_list, col_names, 1000)
 
-save(R_star, RR_star, "R_star_50_01")
+save(R_star, RR_star, file = "R_star_50_01.RData")
 rm(sim_list, R_star, RR_star)
 
 ###############################################################################
