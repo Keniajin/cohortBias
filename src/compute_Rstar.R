@@ -55,3 +55,4 @@ compute_Rstar <- function(data, column_names, nsimul) {
     out_list <- lapply(out_list, function(x) as.data.frame(x))
     out_list
 }
+2
