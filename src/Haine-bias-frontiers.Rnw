@@ -75,6 +75,7 @@ QC, Canada}
 
 \graphicspath{{graphics/pdf/}}
 
+\newcommand{\rmm}{3.4.3}
 
 \begin{document}
 \onecolumn
@@ -170,8 +171,6 @@ QC, Canada}
   expected when imperfect tests are used.
 
 % For full guidelines regarding your manuscript please refer to \href{http://www.frontiersin.org/about/AuthorGuidelines}{Author Guidelines}.
-
-% As a primary goal, the abstract should render the general significance and conceptual advance of the work clearly accessible to a broad readership. References should not be cited in the abstract. Leave the Abstract empty if your article does not require one, please see \href{http://www.frontiersin.org/about/AuthorGuidelines#SummaryTable}{Summary Table} for details according to article type. 
 
 \tiny
  \keyFont{ \section{Keywords:} bias (epidemiology), longitudinal study,
@@ -290,7 +289,7 @@ knitrSet()
 knitrSet('master', echo = echo)
 @
 
-<<packages-load,results='hide',echo=FALSE,eval=FALSE>>=
+<<packages-load,results='hide',echo=FALSE>>=
 library(data.table)
 library(reshape2)
 library(stringr)
@@ -300,11 +299,11 @@ rsession <- sessionInfo()
 rmm <- paste(rsession$R.version$major, rsession$R.version$minor, sep = ".")
 @ 
 
-<<data-load20_10,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load20_10,results='hide',echo=FALSE>>=
 load("../data/R_star_20_10.RData")
 @
 
-<<bias20_10,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias20_10,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -372,19 +371,21 @@ misclassification_bias_RR20_10 <- cbind(misclassification_bias_RR20_10,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row20_10,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row20_10,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(0.1, .14, .18, .22, .25)) +
+    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0, 0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0, 0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity", y = "Specificity") +
+    labs(x = "Sensitivity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -392,17 +393,19 @@ r20_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(selection_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(0.1, seq(.12, .18, .02))) +
+    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0, 0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0, 0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -410,17 +413,18 @@ r20_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(misclassification_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(seq(0.08, .12, .02), .15, .2, .25)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -428,19 +432,21 @@ r20_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 @
 
-<<RR_row20_10,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<RR_row20_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity", y = "Specificity") +
+    labs(x = "Sensitivity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -448,17 +454,19 @@ rr20_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(selection_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(1.7, 2.6, .3)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(size = 7, angle = 90),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -466,17 +474,19 @@ rr20_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(1.4, 2.3, .3)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) + 
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -484,11 +494,11 @@ rr20_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                 fill = "transparent", "draw.rects"))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<data-load20_01,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load20_01,results='hide',echo=FALSE>>=
 load("../data/R_star_20_01.RData")
 @
 
-<<bias20_01,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias20_01,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -556,21 +566,22 @@ misclassification_bias_RR20_01 <- cbind(misclassification_bias_RR20_01,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row20_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row20_01,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.02, seq(.05, .2, .05), .24)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity", title = "Prevalence 20%", subtitle = "Total bias") +
+    labs(title = "Prevalence 20%", subtitle = "True incidence rate = 0.01") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -579,49 +590,10 @@ r20_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
 
 r <- ggplot(selection_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r20_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(misclassification_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r20_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-@
-
-<<RR_row20_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
@@ -630,7 +602,51 @@ rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity", title = "Prevalence 20%", subtitle = "Total bias") +
+    labs(y = "Specificity", title = "Selection bias", subtitle = "True incidence rate = 0.01") +
+    theme(panel.grid.major = element_line(size = .2, color = "grey"),
+          axis.line = element_line(size = .15, color = "black"))
+r20_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
+                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
+                                fill = "transparent", "draw.rects"))
+
+r <- ggplot(misclassification_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(.02, .2, .03)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
+    scale_colour_gradient(guide = 'none') +
+    theme_bw() +
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6)) +
+    labs(title = "Misclassification bias", subtitle = "True incidence rate = 0.01") +
+    theme(panel.grid.major = element_line(size = .2, color = "grey"),
+          axis.line = element_line(size = .15, color = "black"))
+r20_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
+                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
+                                fill = "transparent", "draw.rects"))
+@
+
+<<RR_row20_01,echo=FALSE,results='hide'>>=
+rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
+    scale_colour_gradient(guide = 'none') +
+    theme_bw() +
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6)) +
+    labs(title = "Prevalence 20%", subtitle = "Disease incidence = 0.01") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -638,18 +654,21 @@ rr20_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(selection_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.4, 1.6, 2, 2.4)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
+    labs(title = "Selection bias", subtitle = "Disease incidence = 0.01",
+         y = "Specificity") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -657,18 +676,20 @@ rr20_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.6)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
+    labs(title = "Misclassification bias", subtitle = "Disease incidence = 0.01") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -676,11 +697,11 @@ rr20_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                 fill = "transparent", "draw.rects"))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-<<data-load20_05,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load20_05,results='hide',echo=FALSE>>=
 load("../data/R_star_20_05.RData")
 @
 
-<<bias20_05,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias20_05,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -748,19 +769,21 @@ misclassification_bias_RR20_05 <- cbind(misclassification_bias_RR20_05,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row20_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row20_05,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.06, seq(.1, .2, .05), .26)) +
+    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(y = "Specificity") +
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6)) +
+    labs(subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -769,15 +792,17 @@ r20_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
 
 r <- ggplot(selection_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 5),
           axis.text.x = element_text(size = 5)) +
+    labs(y = "Specificity", subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -785,16 +810,18 @@ r20_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(misclassification_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.04, .05, seq(.1, .26, .04))) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 5),
           axis.text.x = element_text(size = 5)) +
+    labs(subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r20_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -802,19 +829,20 @@ r20_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 @ 
 
-<<RR_row20_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<RR_row20_05,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.5, 3)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 5),
           axis.text.x = element_text(size = 5)) +
-    labs(y = "Specificity") +
+    labs(subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -822,16 +850,18 @@ rr20_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(selection_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(seq(1.6, 2.8, .4), 3)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(size = 7, angle = 90),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(y = "Specificity", subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -839,16 +869,18 @@ rr20_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(seq(1.2, 2, .4), 3)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr20_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -857,11 +889,11 @@ rr20_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<data-load5_01,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load5_01,results='hide',echo=FALSE>>=
 load("../data/R_star_05_01.RData")
 @
 
-<<bias05_01,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias05_01,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -928,12 +960,13 @@ misclassification_bias_RR05_01 <- cbind(misclassification_bias_RR05_01,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row05_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row05_01,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.02, .05, .1, .15, .2)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
@@ -942,7 +975,8 @@ r <- ggplot(total_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity", title = "Prevalence 5%", subtitle = "Total bias") +
+    labs(title = "Prevalence 5%", subtitle = "True incidence rate = 0.01",
+         y = "Specificity") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -951,49 +985,10 @@ r05_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
 
 r <- ggplot(selection_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r05_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(misclassification_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r05_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-@
-
-<<RR_row05_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
@@ -1002,7 +997,52 @@ rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity", title = "Prevalence 5%", subtitle = "Total bias") +
+    labs(title = "Selection bias", subtitle = "True incidence rate = 0.01",
+         y = "Specificity") +
+    theme(panel.grid.major = element_line(size = .2, color = "grey"),
+          axis.line = element_line(size = .15, color = "black"))
+r05_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
+                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
+                                fill = "transparent", "draw.rects"))
+
+r <- ggplot(misclassification_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(.02, .2, .03)) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
+    scale_colour_gradient(guide = 'none') +
+    theme_bw() +
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6)) +
+    labs(title = "Misclassification bias", subtitle = "True incidence rate = 0.01") +
+    theme(panel.grid.major = element_line(size = .2, color = "grey"),
+          axis.line = element_line(size = .15, color = "black"))
+r05_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
+                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
+                                fill = "transparent", "draw.rects"))
+@
+
+<<RR_row05_01,echo=FALSE,results='hide'>>=
+rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.5)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
+    scale_colour_gradient(guide = 'none') +
+    theme_bw() +
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6)) +
+    labs(y = "Specificity", title = "Prevalence 5%", subtitle = "Disease incidence = 0.01") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1011,17 +1051,20 @@ rr05_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 
 rr <- ggplot(selection_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
+    labs(title = "Selection bias", subtitle = "Disease incidence = 0.01",
+         y = "Specificity") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1029,18 +1072,20 @@ rr05_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 2)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
+    labs(title = "Misclassification bias", subtitle = "Disease incidence = 0.01") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1049,11 +1094,11 @@ rr05_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<data-load05_05,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load05_05,results='hide',echo=FALSE>>=
 load("../data/R_star_05_05.RData")
 @
 
-<<bias05_05,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias05_05,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -1120,19 +1165,21 @@ misclassification_bias_RR05_05 <- cbind(misclassification_bias_RR05_05,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row05_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row05_05,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.06, .1, .15, .2, .24)) +
+    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity") +
+    labs(y = "Specificity", subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1140,16 +1187,18 @@ r05_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(selection_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(.05, .065, .005)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(subtitle = "True incidence rate = 0.05", y = "Specificity") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1157,16 +1206,18 @@ r05_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(misclassification_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.04, seq(.05, .2, .05))) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1174,19 +1225,21 @@ r05_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 @
 
-<<RR_row05_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<RR_row05_05,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4, 2.8)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity") +
+    labs(y = "Specificity", subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1194,16 +1247,19 @@ rr05_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(selection_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(2.2, 2.3, 2.4, 2.6, 2.8, 2.9)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(y = "Specificity", subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1211,16 +1267,19 @@ rr05_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.4, 1.6, 2)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
+    labs(subtitle = "Disease incidence = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1229,11 +1288,11 @@ rr05_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<data-load05_10,results='hide',echo=FALSE,eval=FALSE>>=
+<<data-load05_10,results='hide',echo=FALSE>>=
 load("../data/R_star_05_10.RData")
 @
 
-<<bias05_10,echo=FALSE,results='hide',eval=FALSE>>=
+<<bias05_10,echo=FALSE,results='hide'>>=
 ## Incidence
 fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
 fastbound <- lapply(1:3, fastbind.ith.rows)
@@ -1300,19 +1359,20 @@ misclassification_bias_RR05_10 <- cbind(misclassification_bias_RR05_10,
                                         colsplit(ids, '_', names = c("Se", "Sp")))
 @
 
-<<R_row05_10,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<R_row05_10,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(.1, .26, .04)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity", y = "Specificity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1320,17 +1380,18 @@ r05_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 
 r <- ggplot(selection_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.1, .105, .11, .116)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1338,17 +1399,18 @@ r05_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                fill = "transparent", "draw.rects"))
 
 r <- ggplot(misclassification_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(.08, .1, .14, .18, .22, .26)) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 r05_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1356,19 +1418,21 @@ r05_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarg
                                 fill = "transparent", "draw.rects"))
 @
 
-<<RR_row05_10,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<RR_row05_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity", y = "Specificity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1376,17 +1440,19 @@ rr05_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(selection_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = seq(2.3, 2.7, .1)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", y = "Specificity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1394,17 +1460,19 @@ rr05_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
                                   fill = "transparent", "draw.rects"))
 
 rr <- ggplot(misclassification_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+    geom_contour(aes(colour = ..level..), breaks = c(1.4, 1.6, 2, 2.4)) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
+    scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
+    coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
     scale_colour_gradient(guide = 'none') +
     theme_bw() +
-    theme(axis.title.y = element_blank(),
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_blank(),
           axis.title.x = element_text(size = 7),
           axis.text.y = element_text(size = 6),
           axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity") +
+    labs(x = "Sensitivity", subtitle = "Disease incidence = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))
 rr05_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
@@ -1413,1002 +1481,432 @@ rr05_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<data-load50_05,results='hide',echo=FALSE,eval=FALSE>>=
-load("../data/R_star_50_05.RData")
+<<incidence_contour,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
+library(cowplot)
+plot_grid(r05_01t, r20_01t,
+          r05_05t, r20_05t,
+          r05_10t, r20_10t,
+          ncol = 2, align = "hv")
 @
 
-<<totalBias50_05,echo=FALSE,results='hide',eval=FALSE>>=
-## Incidence
-fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_R50_05 <- t(apply(fastbound[[1]], 2,
-                             function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_R50_05) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_R50_05)
-ids <- str_sub(ids, start = 7)
-total_bias_R50_05 <- cbind(total_bias_R50_05, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_R50_05$Pr <- 50
-total_bias_R50_05$Inc <- 0.05
-
-selection_bias_R50_05 <- t(apply(fastbound[[2]], 2,
-                          function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(selection_bias_R50_05) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_R50_05)
-ids <- str_sub(ids, start = 7)
-selection_bias_R50_05 <- cbind(selection_bias_R50_05,
-                               colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_R50_05 <- t(apply(fastbound[[3]], 2,
-                                         function(x) quantile(x, c(.025, .5, .975),
-                                                              na.rm = TRUE)))
-colnames(misclassification_bias_R50_05) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_R50_05)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_R50_05 <- cbind(misclassification_bias_R50_05,
-                                       colsplit(ids, '_', names = c("Se", "Sp")))
-
-## RR
-fastbind.ith.rows <- function(i) rbindlist(lapply(RR_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_RR50_05 <- t(apply(fastbound[[1]], 2,
-                              function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_RR50_05) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_RR50_05)
-ids <- str_sub(ids, start = 7)
-total_bias_RR50_05 <- cbind(total_bias_RR50_05, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_RR50_05$Pr <- 50
-total_bias_RR50_05$Inc <- 0.05
-
-selection_bias_RR50_05 <- t(apply(fastbound[[2]], 2,
-                                  function(x) quantile(x, c(.025, .5, .975),
-                                                       na.rm = TRUE)))
-colnames(selection_bias_RR50_05) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_RR50_05)
-ids <- str_sub(ids, start = 7)
-selection_bias_RR50_05 <- cbind(selection_bias_RR50_05,
-                                colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_RR50_05 <- t(apply(fastbound[[3]], 2,
-                                          function(x) quantile(x, c(.025, .5, .975),
-                                                               na.rm = TRUE)))
-colnames(misclassification_bias_RR50_05) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_RR50_05)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_RR50_05 <- cbind(misclassification_bias_RR50_05,
-                                        colsplit(ids, '_', names = c("Se", "Sp")))
+<<risk_contour,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
+plot_grid(rr05_01t, rr20_01t,
+          rr05_05t, rr20_05t,
+          rr05_10t, rr20_10t,
+          ncol = 2, align = "hv")
 @
 
-<<R_row50_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-r <- ggplot(total_bias_R50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(y = "Specificity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(selection_bias_R50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(misclassification_bias_R50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+<<incidence5_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
+plot_grid(r05_01s, r05_01m,
+          r05_05s, r05_05m,
+          r05_10s, r05_10m,
+          ncol = 2,
+          align = "hv")
 @
 
-<<RR_row50_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-rr <- ggplot(total_bias_RR50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(y = "Specificity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(selection_bias_RR50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(misclassification_bias_RR50_05, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-@ 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-<<data-load50_01,results='hide',echo=FALSE,eval=FALSE>>=
-load("../data/R_star_50_01.RData")
+<<risk5_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
+plot_grid(rr05_01s, rr05_01m,
+          rr05_05s, rr05_05m,
+          rr05_10s, rr05_10m,
+          ncol = 2,
+          align = "hv")
 @
 
-<<bias50_01,echo=FALSE,results='hide',eval=FALSE>>=
-## Incidence
-fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_R50_01 <- t(apply(fastbound[[1]], 2,
-                             function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_R50_01) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_R50_01)
-ids <- str_sub(ids, start = 7)
-total_bias_R50_01 <- cbind(total_bias_R50_01, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_R50_01$Pr <- 50
-total_bias_R50_01$Inc <- 0.01
-
-selection_bias_R50_01 <- t(apply(fastbound[[2]], 2,
-                          function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(selection_bias_R50_01) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_R50_01)
-ids <- str_sub(ids, start = 7)
-selection_bias_R50_01 <- cbind(selection_bias_R50_01,
-                               colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_R50_01 <- t(apply(fastbound[[3]], 2,
-                                         function(x) quantile(x, c(.025, .5, .975),
-                                                              na.rm = TRUE)))
-colnames(misclassification_bias_R50_01) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_R50_01)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_R50_01 <- cbind(misclassification_bias_R50_01,
-                                       colsplit(ids, '_', names = c("Se", "Sp")))
-
-## RR
-fastbind.ith.rows <- function(i) rbindlist(lapply(RR_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_RR50_01 <- t(apply(fastbound[[1]], 2,
-                              function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_RR50_01) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_RR50_01)
-ids <- str_sub(ids, start = 7)
-total_bias_RR50_01 <- cbind(total_bias_RR50_01, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_RR50_01$Pr <- 50
-total_bias_RR50_01$Inc <- 0.01
-
-selection_bias_RR50_01 <- t(apply(fastbound[[2]], 2,
-                                  function(x) quantile(x, c(.025, .5, .975),
-                                                       na.rm = TRUE)))
-colnames(selection_bias_RR50_01) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_RR50_01)
-ids <- str_sub(ids, start = 7)
-selection_bias_RR50_01 <- cbind(selection_bias_RR50_01,
-                                colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_RR50_01 <- t(apply(fastbound[[3]], 2,
-                                          function(x) quantile(x, c(.025, .5, .975),
-                                                               na.rm = TRUE)))
-colnames(misclassification_bias_RR50_01) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_RR50_01)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_RR50_01 <- cbind(misclassification_bias_RR50_01,
-                                        colsplit(ids, '_', names = c("Se", "Sp")))
+<<incidence20_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
+plot_grid(r20_01s, r20_01m,
+          r20_05s, r20_05m,
+          r20_10s, r20_10m,
+          ncol = 2,
+          align = "hv")
 @
 
-<<R_row50_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-r <- ggplot(total_bias_R50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.title = element_text(size = 8, face = "bold"),
-          plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_text(angle = 90, size = 6),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(y = "Specificity", title = "Prevalence 50%", subtitle = "Total bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(selection_bias_R50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-r <- ggplot(misclassification_bias_R50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+<<risk20_contourX,w=8,h=8,echo=FALSE,results='hide', include=FALSE>>=
+plot_grid(rr20_01s, rr20_01m,
+          rr20_05s, rr20_05m,
+          rr20_10s, rr20_10m,
+          ncol = 2,
+          align = "hv")
 @
 
-<<RR_row50_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-rr <- ggplot(total_bias_RR50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+<<dohoo20,echo=FALSE,results='hide'>>=
+library(dplyr)
+dohoo_01 <- total_bias_R20_01 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
+    stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05), 0.01))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
+                linetype = 2, alpha = 0.1, show.legend = FALSE) +
     theme_bw() +
+    guides(color = guide_legend(override.aes = list(fill = NA))) +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
           axis.title.x = element_blank(),
           axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(x = "Sensitivity", title = "Prevalence 50%", subtitle = "Total bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(selection_bias_RR50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Selection bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(misclassification_bias_RR50_01, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(plot.subtitle = element_text(size = 7, face = "bold"),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          axis.text.y = element_text(size = 6),
-          axis.text.x = element_text(size = 6)) +
-    labs(subtitle = "Misclassification bias") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-@ 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-<<data-load50_10,results='hide',echo=FALSE,eval=FALSE>>=
-load("../data/R_star_50_10.RData")
-@
-
-<<bias50_10,echo=FALSE,results='hide',eval=FALSE>>=
-## Incidence
-fastbind.ith.rows <- function(i) rbindlist(lapply(R_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_R50_10 <- t(apply(fastbound[[1]], 2,
-                             function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_R50_10) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_R50_10)
-ids <- str_sub(ids, start = 7)
-total_bias_R50_10 <- cbind(total_bias_R50_10, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_R50_10$Pr <- 50
-total_bias_R50_10$Inc <- 0.1
-
-selection_bias_R50_10 <- t(apply(fastbound[[2]], 2,
-                          function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(selection_bias_R50_10) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_R50_10)
-ids <- str_sub(ids, start = 7)
-selection_bias_R50_10 <- cbind(selection_bias_R50_10,
-                               colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_R50_10 <- t(apply(fastbound[[3]], 2,
-                                         function(x) quantile(x, c(.025, .5, .975),
-                                                              na.rm = TRUE)))
-colnames(misclassification_bias_R50_10) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_R50_10)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_R50_10 <- cbind(misclassification_bias_R50_10,
-                                       colsplit(ids, '_', names = c("Se", "Sp")))
-
-## RR
-fastbind.ith.rows <- function(i) rbindlist(lapply(RR_star, "[", i, TRUE))
-fastbound <- lapply(1:3, fastbind.ith.rows)
-names(fastbound) <- c("Total bias", "Selection bias", "Misclassification bias")
-
-total_bias_RR50_10 <- t(apply(fastbound[[1]], 2,
-                              function(x) quantile(x, c(.025, .5, .975), na.rm = TRUE)))
-colnames(total_bias_RR50_10) <- c("q2.5", "q50", "q97.5")
-
-ids <- rownames(total_bias_RR50_10)
-ids <- str_sub(ids, start = 7)
-total_bias_RR50_10 <- cbind(total_bias_RR50_10, colsplit(ids, '_', names = c("Se", "Sp")))
-total_bias_RR50_10$Pr <- 50
-total_bias_RR50_10$Inc <- 0.1
-
-selection_bias_RR50_10 <- t(apply(fastbound[[2]], 2,
-                                  function(x) quantile(x, c(.025, .5, .975),
-                                                       na.rm = TRUE)))
-colnames(selection_bias_RR50_10) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(selection_bias_RR50_10)
-ids <- str_sub(ids, start = 7)
-selection_bias_RR50_10 <- cbind(selection_bias_RR50_10,
-                                colsplit(ids, '_', names = c("Se", "Sp")))
-
-misclassification_bias_RR50_10 <- t(apply(fastbound[[3]], 2,
-                                          function(x) quantile(x, c(.025, .5, .975),
-                                                               na.rm = TRUE)))
-colnames(misclassification_bias_RR50_10) <- c("q2.5", "q50", "q97.5")
-ids <- rownames(misclassification_bias_RR50_10)
-ids <- str_sub(ids, start = 7)
-misclassification_bias_RR50_10 <- cbind(misclassification_bias_RR50_10,
-                                        colsplit(ids, '_', names = c("Se", "Sp")))
-@
-
-<<R50,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-r <- ggplot(total_bias_R50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity", y = "Specificity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                               cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                               fill = "transparent", "draw.rects"))
-
-r <- ggplot(selection_bias_R50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                               cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                               fill = "transparent", "draw.rects"))
-
-r <- ggplot(misclassification_bias_R50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-r50_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                               cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                               fill = "transparent", "draw.rects"))
-
-library(cowplot)
-plot_grid(r50_01t,r50_01s,r50_01m,r50_05t,r50_05s,r50_05m,r50_10t,r50_10s,r50_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@
-
-<<RR50,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-rr <- ggplot(total_bias_RR50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_text(angle = 90, size = 7),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity", y = "Specificity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(selection_bias_RR50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                  cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
-
-rr <- ggplot(misclassification_bias_RR50_10, aes(x = Se, y = Sp, z = q50)) +
-    geom_contour(aes(colour = ..level..)) +
-    scale_x_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .05), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    theme_bw() +
-    theme(axis.title.y = element_blank(),
-          axis.title.x = element_text(size = 6),
-          axis.text.y = element_text(size = 5),
-          axis.text.x = element_text(size = 5)) +
-    labs(x = "Sensitivity") +
-    theme(panel.grid.major = element_line(size = .2, color = "grey"),
-          axis.line = element_line(size = .15, color = "black"))
-rr50_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
-                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
-
-plot_grid(rr50_01t,rr50_01s,rr50_01m,rr50_05t,rr50_05s,rr50_05m,rr50_10t,rr50_10s,rr50_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@ 
-
-<<R20,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-plot_grid(r20_01t,r20_01s,r20_01m,r20_05t,r20_05s,r20_05m,r20_10t,r20_10s,r20_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@
-
-<<RR20,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-plot_grid(rr20_01t,rr20_01s,rr20_01m,rr20_05t,rr20_05s,rr20_05m,rr20_10t,rr20_10s,rr20_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@
-
-<<R05,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-plot_grid(r05_01t,r05_01s,r05_01m,r05_05t,r05_05s,r05_05m,r05_10t,r05_10s,r05_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@
-
-<<RR05,w=8,h=8,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-plot_grid(rr05_01t,rr05_01s,rr05_01m,rr05_05t,rr05_05s,rr05_05m,rr05_10t,rr05_10s,rr05_10m,
-          ncol=3,
-          align="hv",
-          labels = c("A", "", "", "B", "", "", "C"))
-@
-
-<<IncSe_01,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-total_bias_R <- rbind(total_bias_R05_01, total_bias_R05_05, total_bias_R05_10,
-                     total_bias_R20_01, total_bias_R20_05, total_bias_R20_10,
-                     total_bias_R50_01, total_bias_R50_05, total_bias_R50_10)
-total_bias_R$Pr <- as.factor(total_bias_R$Pr)
-total_bias_R2 <- subset(total_bias_R, Se + Sp == 1.6)
-total_bias_R3 <- subset(total_bias_R, Se + Sp == 1.8)
-
-ggplot(total_bias_R2[total_bias_R2$Inc == 0.01, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
-    stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.6, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.01))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R2[total_bias_R2$Inc == 0.01, ],
-                aes(ymin = q2.5, ymax = q97.5),
-                linetype = 2, alpha = 0.1, show.legend = FALSE) +
-#    expand_limits(#x=c(0.5, 1),
-#        y=c(1, 10)) +
-    theme_bw() + 
-    guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
+          axis.text.x = element_text(size = 6),
           legend.position = c(.925, .8),
           legend.direction = "vertical",
           legend.key = element_rect(colour = "transparent"),
           legend.background = element_rect(linetype = "solid",
                                            colour = "grey42",
                                            size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-#          legend.key.width = unit(2, "cm"),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
-    labs(x = "Specificity", y = "Apparent incidence",
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 7),
+          legend.margin = margin(c(2, 1, .3, 1)),
+          legend.justification = "centre") +
+    labs(y = "Apparent incidence",
          title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.01; Se + Sp = 1.60") +
+         subtitle = "True incidence rate = 0.01. Disease prevalence = 20%") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.01)
-@
-
-<<IncSe_05,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-ggplot(total_bias_R2[total_bias_R2$Inc == 0.05, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
+dohoo_05 <- total_bias_R20_05 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
     stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.6, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.05))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R2[total_bias_R2$Inc == 0.05, ],
-                aes(ymin = q2.5, ymax = q97.5),
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05)))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
                 linetype = 2, alpha = 0.1, show.legend = FALSE) +
-    theme_bw() + 
+    theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
-          legend.position = c(.9, .8),
-          legend.direction = "vertical",
-          legend.key = element_rect(colour = "transparent"),
-          legend.background = element_rect(linetype = "solid",
-                                           colour = "grey42",
-                                           size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
-    labs(x = "Specificity", y = "Apparent incidence",
-         title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.05; Se + Sp = 1.60") +
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
+          legend.position = "none") +
+    labs(y = "Apparent incidence",
+         subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.05)
-@ 
-
-<<IncSe_10,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-ggplot(total_bias_R2[total_bias_R2$Inc == 0.1, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
+dohoo_10 <- total_bias_R20_10 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
     stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.6, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.1))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R2[total_bias_R2$Inc == 0.1, ],
-                aes(ymin = q2.5, ymax = q97.5),
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05), 0.1))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
                 linetype = 2, alpha = 0.1, show.legend = FALSE) +
-    theme_bw() + 
+    theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
-          legend.position = c(.9, .8),
-          legend.direction = "vertical",
-          legend.key = element_rect(colour = "transparent"),
-          legend.background = element_rect(linetype = "solid",
-                                           colour = "grey42",
-                                           size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_text(size = 7),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
+          legend.position = "none") +
     labs(x = "Specificity", y = "Apparent incidence",
-         title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.1; Se + Sp = 1.60") +
+         subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.1)
 @
 
-<<IncSe_01_18,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-ggplot(total_bias_R3[total_bias_R3$Inc == 0.01, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
+<<dohoo20_incidence,w=3.9,h=8.925,echo=FALSE,results='hide', include=FALSE>>=
+plot_grid(dohoo_01, dohoo_05, dohoo_10,
+          nrow = 3,
+          align = "hv")
+@
+
+<<dohoo5,echo=FALSE,results='hide'>>=
+dohoo_01 <- total_bias_R05_01 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
     stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.8, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.01))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R3[total_bias_R3$Inc == 0.01, ],
-                aes(ymin = q2.5, ymax = q97.5),
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05), 0.01))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
                 linetype = 2, alpha = 0.1, show.legend = FALSE) +
-#    expand_limits(#x=c(0.5, 1),
-#        y=c(1, 10)) +
-    theme_bw() + 
+    theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
           legend.position = c(.925, .8),
           legend.direction = "vertical",
           legend.key = element_rect(colour = "transparent"),
           legend.background = element_rect(linetype = "solid",
                                            colour = "grey42",
                                            size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-#          legend.key.width = unit(2, "cm"),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
-    labs(x = "Specificity", y = "Apparent incidence",
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 7),
+          legend.margin = margin(c(2, 1, .3, 1)),
+          legend.justification = "centre") +
+    labs(y = "Apparent incidence",
          title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.01; Se + Sp = 1.80") +
+         subtitle = "True incidence rate = 0.01. Disease prevalence = 5%") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.01)
-@
-
-<<IncSe_05_18,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-ggplot(total_bias_R3[total_bias_R3$Inc == 0.05, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
+dohoo_05 <- total_bias_R05_05 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
     stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.8, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.05))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R3[total_bias_R3$Inc == 0.05, ],
-                aes(ymin = q2.5, ymax = q97.5),
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05)))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
                 linetype = 2, alpha = 0.1, show.legend = FALSE) +
-    theme_bw() + 
+    theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
-          legend.position = c(.9, .8),
-          legend.direction = "vertical",
-          legend.key = element_rect(colour = "transparent"),
-          legend.background = element_rect(linetype = "solid",
-                                           colour = "grey42",
-                                           size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
-    labs(x = "Specificity", y = "Apparent incidence",
-         title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.05; Se + Sp = 1.80") +
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_blank(),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
+          legend.position = "none") +
+    labs(y = "Apparent incidence",
+         subtitle = "True incidence rate = 0.05") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.05)
-@ 
-
-<<IncSe_10_18,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
-ggplot(total_bias_R3[total_bias_R3$Inc == 0.1, ],
-       aes(x = Sp, y = q50, group = Pr, colour = Pr)) +
+dohoo_10 <- total_bias_R05_10 %>%
+    filter(Se == 0.7 | Se == .99) %>%
+    ggplot(aes(x = Sp, y = q50, group = as.factor(Se), colour = as.factor(Se))) +
     stat_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, size = .5) +
-    scale_x_continuous(breaks = seq(.8, 1, .05)) + 
-    scale_y_continuous(breaks = sort(c(seq(0, .5, .05), 0.1))) +
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
-    geom_ribbon(data = total_bias_R3[total_bias_R3$Inc == 0.1, ],
-                aes(ymin = q2.5, ymax = q97.5),
+    scale_y_continuous(breaks = sort(c(seq(0, .35, .05), 0.1))) +
+    scale_colour_manual(name = "Sensitivity",
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
+    geom_ribbon(aes(ymin = q2.5, ymax = q97.5),
                 linetype = 2, alpha = 0.1, show.legend = FALSE) +
-    theme_bw() + 
+    theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          plot.subtitle = element_text(size = 5, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
-          legend.position = c(.9, .8),
-          legend.direction = "vertical",
-          legend.key = element_rect(colour = "transparent"),
-          legend.background = element_rect(linetype = "solid",
-                                           colour = "grey42",
-                                           size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
-          legend.margin = margin(c(2, 1, 0.3, 1)),
-          legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 8)) +
+    theme(plot.subtitle = element_text(size = 7, face = "bold"),
+          axis.title.y = element_text(angle = 90, size = 7),
+          axis.title.x = element_text(size = 7),
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
+          legend.position = "none") +
     labs(x = "Specificity", y = "Apparent incidence",
-         title = "Apparent incidence as a function of specificity",
-         subtitle = "True incidence = 0.1; Se + Sp = 1.80") +
+         subtitle = "True incidence rate = 0.1") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black")) +
     geom_hline(yintercept = 0.1)
 @
 
-<<RR_Se_PrInc,echo=FALSE,results='hide',include=FALSE,eval=FALSE>>=
+<<dohoo5_incidence,w=3.9,h=8.925,echo=FALSE,results='hide', include=FALSE>>=
+plot_grid(dohoo_01, dohoo_05, dohoo_10,
+          nrow = 3,
+          align = "hv")
+@
+
+<<RR_Se_PrInc,echo=FALSE,results='hide',include=FALSE>>=
 total_bias_RR <- rbind(total_bias_RR05_01, total_bias_RR05_05, total_bias_RR05_10,
-                       total_bias_RR20_01, total_bias_RR20_05, total_bias_RR20_10,
-                       total_bias_RR50_01, total_bias_RR50_05, total_bias_RR50_10)
+                       total_bias_RR20_01, total_bias_RR20_05, total_bias_RR20_10)
 total_bias_RR$Pr <- as.factor(total_bias_RR$Pr)
 total_bias_RR$Inc <- as.factor(total_bias_RR$Inc)
-total_bias_RR_Se9 <- subset(total_bias_RR, Se == 0.9)
+total_bias_RR_Se95 <- subset(total_bias_RR, Se == 0.95)
 
-ggplot(total_bias_RR_Se9, aes(x = Sp, y = q50, shape = Inc, colour = Pr,
+ggplot(total_bias_RR_Se95, aes(x = Sp, y = q50, shape = Inc, colour = Pr,
                               group = interaction(Inc, Pr))) +
     geom_line(size = .6) +
     geom_point() + 
-    scale_colour_discrete(name = "Prevalence", labels = c("5%", "20%", "50%")) +
+    scale_colour_manual(name = "Prevalence", labels = c("5%", "20%", "50%"),
+                        values = c("#999999", "#E69F00", "#56B4E9")) +
     scale_shape_discrete(name = "Incidence", labels = c("0.01", "0.05", "0.10")) +
     scale_x_continuous(breaks = seq(.6, 1, .05)) + 
     scale_y_continuous(breaks = seq(1, 3, .2)) +
+    annotate("text", x = 1, y = 3, label = "X", size = 2.5) +
     theme_bw() +
     guides(color = guide_legend(override.aes = list(fill = NA))) +
-    theme(plot.title = element_text(size = 6, face = "bold"),
-          axis.title.y = element_text(size = 5, angle = 90),
-          axis.title.x = element_text(size = 5),
+    theme(plot.title = element_text(size = 8, face = "bold"),
+          axis.title.y = element_text(size = 7, angle = 90),
+          axis.title.x = element_text(size = 7),
           legend.position = c(.35, .65),
           legend.box = "horizontal",
           legend.key = element_rect(colour = "transparent"),
           legend.background = element_rect(linetype = "solid",
                                            colour = "grey42",
                                            size = .2),
-          legend.text = element_text(size = 4),
-          legend.title = element_text(size = 5),
+          legend.text = element_text(size = 6),
+          legend.title = element_text(size = 7),
           legend.justification = "centre",
-          axis.text.y = element_text(size = 4),
-          axis.text.x = element_text(size = 4),
-          plot.caption = element_text(colour = "grey41", size = 5)) +
-    labs(x = "Specificity of test", y = "Apparent relative risk",
-         title = "Bias as a function of specificity and disease risk",
-         caption = "Sensitivity = 0.90; True relative risk = 3.0") +
+          axis.text.y = element_text(size = 6),
+          axis.text.x = element_text(size = 6),
+          plot.caption = element_text(colour = "grey41", size = 6)) +
+    labs(x = "Specificity of test", y = "Apparent risk ratio",
+         title = "Risk ratio total bias as a function of specificity and disease risk",
+         caption = "Sensitivity = 0.95; True risk ratio = 3") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))    
 @ 
 
-\newcommand{\rmm}{3.4.1}
+\section{Introduction}
 
-% \section{Introduction}
+A cohort study is the standard method to estimate the incidence of diseases and
+identify their natural history, by analyzing the association between a baseline
+exposure and risk of disease over the follow-up period.
+A disease-free population is identified, i.e.\ subjects with the outcome at
+baseline are excluded from the follow-up, while new, incident cases of exposure
+are identified.
+Therefore it is assumed that prevalent and non-prevalent cases can be
+differentiated with no error so that only susceptible individuals are included in the
+follow-up.
+Incident cases are likewise supposed to be correctly identified.
 
-% For Original Research Articles \citep{conference}, Clinical Trial Articles \citep{article}, and Technology Reports \citep{patent}, the introduction should be succinct, with no subheadings \citep{book}. For Case Reports the Introduction should include symptoms at presentation \citep{chapter}, physical exams and lab results \citep{dataset}.
+However, using imperfect tests may lead to biased estimates of disease frequency
+and measures of association.
+Many studies have looked into the effect of misclassification on statistical
+inferences.
+These evaluations were either within a cross-sectional study framework,
+assessing biased prevalence, or for cohort study designs, evaluating biased
+incidence rate or risk ratio (RR) estimates based on misclassification at one of
+the two time-points (initial assessment or follow-up).
+However, both observations at risk and incident cases can be wrongly identified
+in longitudinal studies, leading to selection and misclassification biases,
+respectively.
 
-% \bibliographystyle{frontiersinSCNS_ENG_HUMS} % for Science, Engineering and Humanities and Social Sciences articles, for Humanities and Social Sciences articles please include page numbers in the in-text citations
-% %\bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
-% \bibliography{bias}
+The objective of this paper was to evaluate the relative impact of selection and
+misclassification biases resulting from misclassification, together, on measures
+of incidence and risk ratio.
+
+\section{Material and Methods}
+
+To investigate impact on measure of disease frequency, data sets from a
+hypothetical cohort study with two samples collected one month apart were
+simulated and analyzed based on specific test and disease characteristics, for a
+stable population over the follow-up time, and with no elimination of disease or
+clustering of observations.
+Direction and magnitude of bias due to selection, misclassification, and total
+bias was assessed for diagnostic test sensitivity and specificity ranging from
+0.7 to 1.0 and 0.8 to 1.0, respectively, and for specific disease contexts,
+i.e.\ disease prevalences of 5 and 20\%, and disease incidences of 0.01, 0.05,
+and 0.1 cases/animal-month.
+A hypothetical exposure with known strength of association (RR
+\raise.17ex\hbox{$\scriptstyle\sim$}\num{3.0}) was also generated.
+A total of \numprint{1000} cohort studies of \numprint{1000} observations each
+were simulated for these six disease contexts where the same diagnostic test was
+used to identify observations at risk at beginning of the cohort and incident
+cases at its end.
+
+\section{Results}
+\label{sec:results}
+
+
+\section{Discussion}
+\label{sec:discussion}
+
+Departure of the estimates of disease incidence and risk ratio from their true
+value are mainly a function of test specificity, and disease prevalence and
+incidence.
+Importance of a good to excellent specificity over sensitivity.
+Importance of choosing a highly specific test to improve unit at risk and case
+identification.
+
+\section*{Conflict of Interest Statement}
+
+The authors declare that the research was conducted in the absence of any
+commercial or financial relationships that could be construed as a potential
+conflict of interest.
+
+\section*{Author Contributions}
+
+The Author Contributions section is mandatory for all articles, including
+articles by sole authors. If an appropriate statement is not provided on
+submission, a standard one will be inserted during the production process. The
+Author Contributions statement must describe the contributions of individual
+authors referred to by their initials and, in doing so, all authors agree to be
+accountable for the content of the work. Please see
+\href{http://home.frontiersin.org/about/author-guidelines#AuthorandContributors}{here}
+for full authorship criteria.
+
+\section*{Funding}
+Details of all funding sources should be provided, including grant numbers if
+applicable. Please ensure to add all necessary funding information, as after
+publication this is no longer possible.
+
+\section*{Acknowledgments}
+This is a short text to acknowledge the contributions of specific colleagues,
+institutions, or agencies that aided the efforts of the authors.
+
+\section*{Supplemental Data}
+ \href{http://home.frontiersin.org/about/author-guidelines#SupplementaryMaterial}{Supplementary
+   Material} should be uploaded separately on submission, if there are
+ Supplementary Figures, please include the caption in the same file as the
+ figure. LaTeX Supplementary Material templates can be found in the Frontiers
+ LaTeX folder.
+
+
+\bibliographystyle{frontiersinSCNS_ENG_HUMS} % for Science, Engineering and Humanities and Social Sciences articles, for Humanities and Social Sciences articles please include page numbers in the in-text citations
+%\bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
+\bibliography{bias}
 
 %%% Make sure to upload the bib file along with the tex file and PDF
 %%% Please see the test.bib file for some examples of references
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-R05-1}
-% \end{center}
-% \caption{Incidence---Misclassification bias---Prevalence of 5\% (A = incidence of 0.01; B =
-%   incidence of 0.05; C = incidence of 0.1).}\label{fig:p5}
-% \end{figure}
+\section*{Figure captions}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-R20-1}
-% \end{center}
-% \caption{Incidence---Misclassification bias---Prevalence of 20\% (A = incidence of 0.01; B =
-%   incidence of 0.05; C = incidence of 0.1).}\label{fig:p20}
-% \end{figure}
+%%% Please be aware that for original research articles we only permit a combined number of 15 figures and tables, one figure with multiple subfigures will count as only one figure.
+%%% Use this if adding the figures directly in the mansucript, if so, please remember to also upload the files when submitting your article
+%%% There is no need for adding the file termination, as long as you indicate where the file is saved. In the examples below the files (logo1.jpg and logos.jpg) are in the Frontiers LaTeX folder
+%%% If using *.tif files convert them to .jpg or .png
+%%%  NB logo1.jpg is required in the path in order to correctly compile front page header %%%
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-R50-1}
-% \end{center}
-% \caption{Incidence---Misclassification bias---Prevalence of 50\% (A = incidence of 0.01; B =
-%   incidence of 0.05; C = incidence of 0.1).}\label{fig:p50}
-% \end{figure}
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[scale=.95]{master-incidence_contour-1}
+    \end{center}
+  \caption{Total bias for incidence rate according to sensitivity and
+    specificity, for 5\% and 20\% disease prevalence.}
+  \label{fig:incidence_contour}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_01-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.60. True incidence is 0.01.}\label{fig:IncSe_01}
-% \end{figure}
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[scale=.95]{master-risk_contour-1}
+    \end{center}
+  \caption{Total bias for risk ratio according to sensitivity and specificity,
+    for 5\% and 20\% disease prevalence. True risk ratio = 3.}
+  \label{fig:incidence_risk}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_05-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.60. True incidence is 0.05.}\label{fig:IncSe_05}
-% \end{figure}
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[scale=.95]{master-dohoo5_incidence-1}
+    \end{center}
+  \caption{Apparent incidence resulting from total bias, as a function of
+    specificity. Disease prevalence = 5\%.}
+  \label{fig:apparent_incidence_5}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_10-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.60. True incidence is 0.1.}\label{fig:IncSe_1}
-% \end{figure}
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[scale=.95]{master-dohoo20_incidence-1}
+    \end{center}
+  \caption{Apparent incidence resulting from total bias, as a function of
+    specificity. Disease prevalence = 20\%.}
+  \label{fig:apparent_incidence_20}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_01_18-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.80. True incidence is 0.01.}\label{fig:IncSe_01_18}
-% \end{figure}
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[scale=.95]{master-RR_Se_PrInc-1}
+    \end{center}
+  \caption{Total bias for risk ratio as a function of specificity and disease
+    risk, and for a sensitivity of 95\%. True risk ratio = 3.}
+  \label{fig:apparent_incidence_20}
+\end{figure}
 
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_05_18-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.80. True incidence is 0.05.}\label{fig:IncSe_05_18}
-% \end{figure}
-
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-IncSe_10_18-1}
-% \end{center}
-% \caption{Apparent incidence and 95\% confidence interval as a function of
-%   specificity, for various prevalences, and with a combined sensitivity and
-%   specificity of 1.80. True incidence is 0.1.}\label{fig:IncSe_1_18}
-% \end{figure}
-
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-RR05-1}
-% \end{center}
-% \caption{Relative risk---Misclassification bias---Prevalence of 5\% (A =
-%   incidence of 0.01; B = incidence of 0.05; C = incidence of 0.1).}\label{fig:RR05}
-% \end{figure}
-
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-RR20-1}
-% \end{center}
-% \caption{Relative risk---Misclassification bias---Prevalence of 20\% (A =
-%   incidence of 0.01; B = incidence of 0.05; C = incidence of 0.1).}\label{fig:RR20}
-% \end{figure}
-
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-RR50-1}
-% \end{center}
-% \caption{Relative risk---Misclassification bias---Prevalence of 50\% (A =
-%   incidence of 0.01; B = incidence of 0.05; C = incidence of 0.1).}\label{fig:RR50}
-% \end{figure}
-
-% \begin{figure}[h!]
-% \begin{center}
-% \includegraphics[width=\textwidth]{master-RR_Se_PrInc-1}
-% \end{center}
-% \caption{Bias to relative risk as a function of specificity and disease
-%   risk.}\label{fig:RR_PrInc}
-% \end{figure}
+%%% If you are submitting a figure with subfigures please combine these into one image file with part labels integrated.
+%%% If you don't add the figures in the LaTeX files, please upload them when submitting the article.
+%%% Frontiers will add the figures at the end of the provisional pdf automatically
+%%% The use of LaTeX coding to draw Diagrams/Figures/Structures should be avoided. They should be external callouts including graphics.
 
 \end{document}
 
 %%% Local Variables:
 %%% ispell-local-dictionary: "canadian"
 %%% eval: (flyspell-mode 1)
-%%% reftex-default-bibliography: ("./bib/bias.bib")
+%%% reftex-default-bibliography: ("./bias.bib")
 %%% End:
