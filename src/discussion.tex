@@ -1,0 +1,128 @@
+Our results indicated that the departure of the estimates of disease incidence
+and risk ratio from their true value were mainly a function of test specificity,
+and disease prevalence and incidence.
+Imperfect sensitivity to identify individuals at risk and imperfect
+specificity to identify incident cases lead to a mild under-estimation of the
+observed disease incidence.
+The combination of the two biases, at baseline and follow-up, revealed the
+importance of a good to excellent specificity over sensitivity for the
+diagnostic test.
+Small divergence from perfect specificity extended quickly to disease
+incidence over-estimation as true prevalence increased and true incidence
+decreased.
+Selection and misclassification biases of a low prevalent and incident
+disease, diagnosed with close to perfect specificity, were minimal, reflecting
+the importance of choosing a highly specific test to improve unit at risk and
+case identification.
+A highly sensitive test to exclude diseased subjects at baseline was of less
+importance to minimize bias than using a highly specific one.
+
+Near perfect diagnostic test attributes were even more important to obtain a
+measure of association close to the true risk ratio, according to specific
+disease characteristics, especially its prevalence.
+Low prevalent and high incident disease lead to minimal bias if disease is
+diagnosed with high sensitivity and close to perfect specificity.
+For more prevalent diseases we observed large risk ratio biases towards the
+null value, even with near perfect diagnosis.
+This bias also got larger as incidence decreased.
+For diseases with moderate to high prevalence (20\%), the biases can be so
+important that a study using a test with a sensitivity or specificity < 0.95
+would have very little power to identify any measure of association with
+exposures.
+Even with prevalence of disease of 5\%, a dramatic loss of power is to be
+expected when imperfect tests are used.
+
+It is already recognized that misclassification of outcome or exposure during
+follow-up leads to bias toward null in the estimated
+associations~\citep{Bross1954,Copeland1977,FLEGAL_1986} as well as reduced
+statistical efficiency by loss of power\citep{WHITE_1986} and confidence
+intervals of the parameters estimates that are too narrow~\citep{Neuhaus_1999}.
+However this bias toward the null value is strictly true only when
+misclassification is the same in the two compared groups, i.e.\ covariates do
+not influence Se and/or Sp~\citep{Copeland1977,Sorahan_1994,Neuhaus_1999}.
+In this case, we have non-differential misclassification.
+As shown previously by \cite{Copeland1977}, misclassification bias depends
+primarily on the Sp of the test used and increase with disease rarity, with most
+of the bias occurring even before the specificity drops below 85\%.
+With Se and Sp as high as 0.9 and 0.96, respectively, RR is already
+substantially biased (1.5 instead of 2).
+But when Sp is perfect, bias is absent~\citep{Poole1985}.
+When disease frequency is low, error in disease diagnosis leads to an increase
+in false positives which submerge true positives and dilute measures of
+incidence and association.
+Bias in RR increases as Se increase and Sp decrease~\citep{WHITE_1986}.
+Exposure misclassification alone can cause serious bias on the RR even if Se or
+Sp are not lower than 80\%~\citep{Kristensen_1992}.
+
+When misclassification is differential, i.e.\ Se and Sp of outcome
+classification is not equal in each true category of exposure (or Se and Sp of
+exposure classification is not equal in each true category of outcome),
+direction of bias for parameter estimates can be in any
+direction~\citep{Dosemeci_1990,Neuhaus_1999,Chen_2013}.
+In this case, Se and Sp as low as 90\% can be sufficient to produce high
+bias~\citep{Kristensen_1992}.
+Direction of the bias can also be in any direction with dependent
+misclassification (i.e.\ the errors in one variable are associated with the
+errors in an other, \citealp{Assakul_1967,Greenland_1989}), even if
+non-differential~\citep{Kristensen_1992}.
+The same is found when the exposure variable is not dichotomous but has multiple
+levels~\citep{Dosemeci_1990,Weinberg_1994}.
+Bias towards the null also requires that selection bias and confounding are
+absent~\citep{Jurek_2004}.
+There are therefore many situations where bias toward null do not apply.
+Even when non-differential misclassification is thought to take place, random
+errors in the observed estimates can bias away from the null~\citep{Jurek_2004}.
+
+In cohort studies, non-differential misclassification of disease at baseline,
+i.e.\ selection bias, especially imperfect sensitivity, can lead to over- or
+under-estimation of the observed RR~\citep{Pekkanen2006}.
+This bias can be significant for disease with a low true incidence, a high true
+prevalence, a substantial disease duration (i.e.\ as long as the interval between
+first and second test), and a poor test Se.
+In the presence of misclassification of disease at baseline the observed RR
+depend on the association between exposure and disease both at baseline and
+during follow-up~\citep{Pekkanen2006}.
+Therefore to minimize bias, the standard recommendation is to exclude subjects
+with the outcome at baseline from the cohort based on a highly sensitive
+test~\citep{Pekkanen2008}.
+Then during the follow-up period, case identification should use a highly
+specific test having a high positive predictive value~\citep{Brenner1993}.
+However \cite{Haine2017} have shown that a more prevalent and incident disease
+diagnosed with an imperfect Se and/or Sp will give biased measure of association
+despite attempts to improve its diagnosis.
+
+We have shown here that combined misclassification at baseline and follow-up
+requires a highly specific test.
+If a test with high Sp cannot be used, one could use a less efficient test twice
+at recruitment or for identifying incident cases and with a serial
+interpretation.
+The lost in Se of such an approach would caused little bias, compared to the
+potential gains due to the increased Sp.
+However, this combined misclassification would also require a highly sensitive
+test to estimate an association close to the true RR.
+Unfortunately increasing Sp of a test very often decreases its Se, i.e.\ a lower
+probability for diseased individuals to be recognized as diseased.
+As a results, some classification errors are to be expected leading to biased
+parameters estimates.
+If classification errors cannot be avoided during the study design stage, the
+misclassification bias can be corrected into the analytic stage.
+For instance, Se and Sp of the test can be incorporated into the modelling
+strategy~\citep{Magder1997}, by performing a probabilistic sensitivity
+analysis~\citep{Fox_2005}, or by including the uncertainty in the estimates with
+a Bayesian analysis in the form of prior distributions~\citep{McInturff2004}.
+A latent class model~\citep{Hui1980} would therefore return the posterior
+inference on regression parameters and the Se and Sp of both tests.
+
+Bias in parameters estimates can be important when considering selection and
+misclassification biases together in a cohort study.
+Our results underscore the need for a careful evaluation of the best available
+options to identify at risk and incident cases according to the expected disease
+prevalence and incidence of the study. 
+
+%%% Local Variables:
+%%% ispell-local-dictionary: "canadian"
+%%% mode: latex
+%%% eval: (flyspell-mode 1)
+%%% TeX-master: t
+%%% reftex-default-bibliography: ("./bias.bib")
+%%% End:

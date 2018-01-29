@@ -41,6 +41,7 @@
 \usepackage{xspace}
 \usepackage{booktabs}
 \usepackage{xfrac}
+\usepackage{cleveref}
 \usepackage{paralist}  % for in-line list
 \usepackage{siunitx}
 \usepackage[autolanguage]{numprint}
@@ -99,76 +100,7 @@ QC, Canada}
 
 %%% Leave the Abstract empty if your article does not require one, please see the Summary Table for full details.
   \section{}
-  Using imperfect tests may lead to biased estimates of disease frequency and
-  measures of association.
-  Many studies have looked into the effect of misclassification on statistical
-  inferences.
-  These evaluations were either within a cross-sectional study framework,
-  assessing biased prevalence, or for cohort study designs, evaluating biased
-  incidence rate or risk ratio (RR) estimates based on misclassification at one
-  of the two time-points (initial assessment or follow-up).
-  However, both observations at risk and incident cases can be wrongly
-  identified in longitudinal studies, leading to selection and misclassification
-  biases, respectively.
-  The objective of this paper was to evaluate the relative impact of selection
-  and misclassification biases resulting from misclassification, together, on
-  measures of incidence and risk ratio.
-
-  To investigate impact on measure of disease frequency, data sets from a
-  hypothetical cohort study with two samples collected one month apart were
-  simulated and analyzed based on specific test and disease characteristics, for
-  a stable population over the follow-up time, and with no elimination of
-  disease or clustering of observations.
-  Direction and magnitude of bias due to selection, misclassification, and total
-  bias was assessed for diagnostic test sensitivity and specificity ranging from
-  0.7 to 1.0 and 0.8 to 1.0, respectively, and for specific disease contexts,
-  i.e.\ disease prevalences of 5 and 20\%, and disease incidences of 0.01, 0.05,
-  and 0.1 cases/animal-month.
-  A hypothetical exposure with known strength of association (RR
-  \raise.17ex\hbox{$\scriptstyle\sim$}\num{3.0}) was also generated.
-  A total of \numprint{1000} cohort studies of \numprint{1000} observations each
-  were simulated for these six disease contexts where the same diagnostic test
-  was used to identify observations at risk at beginning of the cohort and
-  incident cases at its end.
-  
-  Our results indicated that the departure of the estimates of disease incidence
-  and risk ratio from their true value were mainly a function of test
-  specificity, and disease prevalence and incidence.
-  Imperfect sensitivity to identify individuals at risk and imperfect
-  specificity to identify incident cases lead to a mild under-estimation of the
-  observed disease incidence.
-  The combination of the two biases, at baseline and follow-up, revealed the
-  importance of a good to excellent specificity over sensitivity for the
-  diagnostic test.
-  Small divergence from perfect specificity extended quickly to disease
-  incidence over-estimation as true prevalence increased and true incidence
-  decreased.
-  Selection and misclassification biases of a low prevalent and incident
-  disease, diagnosed with close to perfect specificity, were minimal, reflecting
-  the importance of choosing a highly specific test to improve unit at risk and
-  case identification.
-  A highly sensitive test to exclude diseased subjects at baseline was of less
-  importance to minimize bias than using a highly specific one.
-  For instance, when a test with high specificity cannot be used, one could use
-  a less performant test twice at recruitment or for identifying incident cases
-  and with a serial interpretation.
-  The lost in sensitivity of such an approach would caused little bias, compared
-  to the potential gains due to the increased specificity.
-
-  Near perfect diagnostic test attributes were even more important to obtain a
-  measure of association close to the true risk ratio, according to specific
-  disease characteristics, especially its prevalence.
-  Low prevalent and high incident disease lead to minimal bias if disease is
-  diagnosed with high sensitivity and close to perfect specificity.
-  For more prevalent diseases we observed large risk ratio biases towards the
-  null value, even with near perfect diagnosis.
-  This bias also got larger as incidence decreased.
-  For diseases with moderate to high prevalence (20\%), the biases can be so
-  important that a study using a test with a sensitivity or specificity < 0.95
-  would have very little power to identify any measure of association with
-  exposures.
-  Even with prevalence of disease of 5\%, a dramatic loss of power is to be
-  expected when imperfect tests are used.
+\input{abstract.tex}
 
 % For full guidelines regarding your manuscript please refer to \href{http://www.frontiersin.org/about/AuthorGuidelines}{Author Guidelines}.
 
@@ -568,6 +500,7 @@ misclassification_bias_RR20_01 <- cbind(misclassification_bias_RR20_01,
 
 <<R_row20_01,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
+
     geom_contour(aes(colour = ..level..), breaks = c(.02, seq(.05, .2, .05), .24)) +
     annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
@@ -1482,50 +1415,95 @@ rr05_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enla
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <<incidence_contour,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
-library(cowplot)
-plot_grid(r05_01t, r20_01t,
-          r05_05t, r20_05t,
-          r05_10t, r20_10t,
-          ncol = 2, align = "hv")
+library(gtable)
+library(grid)
+plots1 <- list(r05_01t, r20_01t)
+plots2 <- list(r05_05t, r20_05t)
+plots3 <- list(r05_10t, r20_10t)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<risk_contour,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
-plot_grid(rr05_01t, rr20_01t,
-          rr05_05t, rr20_05t,
-          rr05_10t, rr20_10t,
-          ncol = 2, align = "hv")
+plots1 <- list(rr05_01t, rr20_01t)
+plots2 <- list(rr05_05t, rr20_05t)
+plots3 <- list(rr05_10t, rr20_10t)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<incidence5_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
-plot_grid(r05_01s, r05_01m,
-          r05_05s, r05_05m,
-          r05_10s, r05_10m,
-          ncol = 2,
-          align = "hv")
+plots1 <- list(r05_01s, r05_01m)
+plots2 <- list(r05_05s, r05_05m)
+plots3 <- list(r05_10s, r05_10m)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<risk5_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
-plot_grid(rr05_01s, rr05_01m,
-          rr05_05s, rr05_05m,
-          rr05_10s, rr05_10m,
-          ncol = 2,
-          align = "hv")
+plots1 <- list(rr05_01s, rr05_01m)
+plots2 <- list(rr05_05s, rr05_05m)
+plots3 <- list(rr05_10s, rr05_10m)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<incidence20_contourX,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
-plot_grid(r20_01s, r20_01m,
-          r20_05s, r20_05m,
-          r20_10s, r20_10m,
-          ncol = 2,
-          align = "hv")
+plots1 <- list(r20_01s, r20_01m)
+plots2 <- list(r20_05s, r20_05m)
+plots3 <- list(r20_10s, r20_10m)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<risk20_contourX,w=8,h=8,echo=FALSE,results='hide', include=FALSE>>=
-plot_grid(rr20_01s, rr20_01m,
-          rr20_05s, rr20_05m,
-          rr20_10s, rr20_10m,
-          ncol = 2,
-          align = "hv")
+plots1 <- list(rr20_01s, rr20_01m)
+plots2 <- list(rr20_05s, rr20_05m)
+plots3 <- list(rr20_10s, rr20_10m)
+grobs1 <- lapply(plots1, ggplotGrob)
+grobs2 <- lapply(plots2, ggplotGrob)
+grobs3 <- lapply(plots3, ggplotGrob)
+g1 <- do.call(cbind, c(grobs1, size = "first"))
+g2 <- do.call(cbind, c(grobs2, size = "first"))
+g3 <- do.call(cbind, c(grobs3, size = "first"))
+g4 <- do.call(rbind, c(list(g1, g2, g3), size = "first"))
+grid.newpage()
+grid.draw(g4)
 @
 
 <<dohoo20,echo=FALSE,results='hide'>>=
@@ -1610,6 +1588,7 @@ dohoo_10 <- total_bias_R20_10 %>%
 @
 
 <<dohoo20_incidence,w=3.9,h=8.925,echo=FALSE,results='hide', include=FALSE>>=
+library(cowplot)
 plot_grid(dohoo_01, dohoo_05, dohoo_10,
           nrow = 3,
           align = "hv")
@@ -1744,65 +1723,21 @@ ggplot(total_bias_RR_Se95, aes(x = Sp, y = q50, shape = Inc, colour = Pr,
 
 \section{Introduction}
 
-A cohort study is the standard method to estimate the incidence of diseases and
-identify their natural history, by analyzing the association between a baseline
-exposure and risk of disease over the follow-up period.
-A disease-free population is identified, i.e.\ subjects with the outcome at
-baseline are excluded from the follow-up, while new, incident cases of exposure
-are identified.
-Therefore it is assumed that prevalent and non-prevalent cases can be
-differentiated with no error so that only susceptible individuals are included in the
-follow-up.
-Incident cases are likewise supposed to be correctly identified.
-
-However, using imperfect tests may lead to biased estimates of disease frequency
-and measures of association.
-Many studies have looked into the effect of misclassification on statistical
-inferences.
-These evaluations were either within a cross-sectional study framework,
-assessing biased prevalence, or for cohort study designs, evaluating biased
-incidence rate or risk ratio (RR) estimates based on misclassification at one of
-the two time-points (initial assessment or follow-up).
-However, both observations at risk and incident cases can be wrongly identified
-in longitudinal studies, leading to selection and misclassification biases,
-respectively.
-
-The objective of this paper was to evaluate the relative impact of selection and
-misclassification biases resulting from misclassification, together, on measures
-of incidence and risk ratio.
+\input{intro.tex}
 
 \section{Material and Methods}
 
-To investigate impact on measure of disease frequency, data sets from a
-hypothetical cohort study with two samples collected one month apart were
-simulated and analyzed based on specific test and disease characteristics, for a
-stable population over the follow-up time, and with no elimination of disease or
-clustering of observations.
-Direction and magnitude of bias due to selection, misclassification, and total
-bias was assessed for diagnostic test sensitivity and specificity ranging from
-0.7 to 1.0 and 0.8 to 1.0, respectively, and for specific disease contexts,
-i.e.\ disease prevalences of 5 and 20\%, and disease incidences of 0.01, 0.05,
-and 0.1 cases/animal-month.
-A hypothetical exposure with known strength of association (RR
-\raise.17ex\hbox{$\scriptstyle\sim$}\num{3.0}) was also generated.
-A total of \numprint{1000} cohort studies of \numprint{1000} observations each
-were simulated for these six disease contexts where the same diagnostic test was
-used to identify observations at risk at beginning of the cohort and incident
-cases at its end.
+\input{mm.tex}
 
 \section{Results}
 \label{sec:results}
 
+\input{results.tex}
 
 \section{Discussion}
 \label{sec:discussion}
 
-Departure of the estimates of disease incidence and risk ratio from their true
-value are mainly a function of test specificity, and disease prevalence and
-incidence.
-Importance of a good to excellent specificity over sensitivity.
-Importance of choosing a highly specific test to improve unit at risk and case
-identification.
+\input{discussion.tex}
 
 \section*{Conflict of Interest Statement}
 
@@ -1812,31 +1747,31 @@ conflict of interest.
 
 \section*{Author Contributions}
 
-The Author Contributions section is mandatory for all articles, including
-articles by sole authors. If an appropriate statement is not provided on
-submission, a standard one will be inserted during the production process. The
-Author Contributions statement must describe the contributions of individual
-authors referred to by their initials and, in doing so, all authors agree to be
-accountable for the content of the work. Please see
-\href{http://home.frontiersin.org/about/author-guidelines#AuthorandContributors}{here}
-for full authorship criteria.
+DH conducted the simulations, data analysis, results interpretation, and the
+manuscript writing.
+ID and SD contributed in interpreting the results and editing the manuscript.
 
 \section*{Funding}
-Details of all funding sources should be provided, including grant numbers if
-applicable. Please ensure to add all necessary funding information, as after
-publication this is no longer possible.
 
-\section*{Acknowledgments}
-This is a short text to acknowledge the contributions of specific colleagues,
-institutions, or agencies that aided the efforts of the authors.
+This research was financed by the senior author (SD) Natural Sciences and
+Engineering Research Council of Canada Discovery Grant.
 
-\section*{Supplemental Data}
- \href{http://home.frontiersin.org/about/author-guidelines#SupplementaryMaterial}{Supplementary
-   Material} should be uploaded separately on submission, if there are
- Supplementary Figures, please include the caption in the same file as the
- figure. LaTeX Supplementary Material templates can be found in the Frontiers
- LaTeX folder.
+% \section*{Acknowledgments}
+% This is a short text to acknowledge the contributions of specific colleagues,
+% institutions, or agencies that aided the efforts of the authors.
 
+\section*{Supplementary Figures}
+
+\textbf{Figure S1.} Selection and misclassification biases for incidence rate
+according to sensitivity and specificity. Disease prevalence = 5\%.
+\textbf{Figure S2.} Selection and misclassification biases for incidence rate
+according to sensitivity and specificity. Disease prevalence = 20\%.
+\textbf{Figure S3.} Selection and misclassification biases for risk ratio
+according to sensitivity and specificity. Disease prevalence = 5\%; true risk
+ratio = 3.
+\textbf{Figure S4.} Selection and misclassification biases for risk ratio
+according to sensitivity and specificity. Disease prevalence = 20\%; true risk
+ratio = 3.
 
 \bibliographystyle{frontiersinSCNS_ENG_HUMS} % for Science, Engineering and Humanities and Social Sciences articles, for Humanities and Social Sciences articles please include page numbers in the in-text citations
 %\bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
@@ -1895,7 +1830,7 @@ institutions, or agencies that aided the efforts of the authors.
     \end{center}
   \caption{Total bias for risk ratio as a function of specificity and disease
     risk, and for a sensitivity of 95\%. True risk ratio = 3.}
-  \label{fig:apparent_incidence_20}
+  \label{fig:apparent_RR}
 \end{figure}
 
 %%% If you are submitting a figure with subfigures please combine these into one image file with part labels integrated.
