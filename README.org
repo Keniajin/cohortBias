@@ -58,3 +58,6 @@ diagnosed with high sensitivity and close to perfect specificity.
 For more prevalent diseases we observed large risk ratio biases towards the
 null value, even with near perfect diagnosis.
 
+* Running
+
+=bias_analysis.R= is the source file for running the simulations.
