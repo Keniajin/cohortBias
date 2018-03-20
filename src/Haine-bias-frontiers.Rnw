@@ -69,9 +69,9 @@ $^{3}$Canadian Bovine Mastitis and Milk Quality Research Network, St-Hyacinthe,
 QC, Canada}
 % The Corresponding Author should be marked with an asterisk
 % Provide the exact contact address (this time including street name and city zip code) and email of the corresponding author
-\def\corrAuthor{Denis Haine}
+\def\corrAuthor{Simon Dufour}
 
-\def\corrEmail{denis.haine@gmail.com}
+\def\corrEmail{simon.dufour@umontreal.ca}
 
 
 \graphicspath{{graphics/pdf/}}
@@ -106,7 +106,7 @@ QC, Canada}
 
 \tiny
  \keyFont{ \section{Keywords:} bias (epidemiology), longitudinal study,
-   selection bias, misclassification} %All article types: you may provide up to 8 keywords; at least 5 are mandatory.
+   selection bias, misclassification, epidemiologic methods} %All article types: you may provide up to 8 keywords; at least 5 are mandatory.
 \end{abstract}
 
 <<setup1,echo=FALSE>>=
@@ -1750,6 +1750,7 @@ conflict of interest.
 DH conducted the simulations, data analysis, results interpretation, and the
 manuscript writing.
 ID and SD contributed in interpreting the results and editing the manuscript.
+DH, ID, and SD contributed to the planning of the study.
 
 \section*{Funding}
 
@@ -1762,16 +1763,24 @@ Engineering Research Council of Canada Discovery Grant.
 
 \section*{Supplementary Figures}
 
-\textbf{Figure S1.} Selection and misclassification biases for incidence rate
-according to sensitivity and specificity. Disease prevalence = 5\%.
-\textbf{Figure S2.} Selection and misclassification biases for incidence rate
-according to sensitivity and specificity. Disease prevalence = 20\%.
-\textbf{Figure S3.} Selection and misclassification biases for risk ratio
-according to sensitivity and specificity. Disease prevalence = 5\%; true risk
-ratio = 3.
-\textbf{Figure S4.} Selection and misclassification biases for risk ratio
-according to sensitivity and specificity. Disease prevalence = 20\%; true risk
-ratio = 3.
+\textbf{Figure S1.} Estimated incidence rate as a function of test sensitivity
+and specificity, a disease prevalence of 5\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) when using an imperfect test at baseline
+(selection bias) or at follow-up (misclassification bias).
+\textbf{Figure S2.} Estimated incidence rate as a function of test sensitivity
+and specificity, a disease prevalence of 20\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) when using an imperfect test at baseline
+(selection bias) or at follow-up (misclassification bias).
+\textbf{Figure S3.} Estimated risk ratio as a function of test sensitivity and
+specificity, a disease prevalence of 5\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
+association corresponding to a risk ratio of \(3.0\) when using an imperfect
+test at baseline (selection bias) or at follow-up (misclassification bias).
+\textbf{Figure S4.} Estimated risk ratio as a function of test sensitivity and
+specificity, a disease prevalence of 20\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
+association corresponding to a risk ratio of \(3.0\) when using an imperfect
+test at baseline (selection bias) or at follow-up (misclassification bias).
 
 \bibliographystyle{frontiersinSCNS_ENG_HUMS} % for Science, Engineering and Humanities and Social Sciences articles, for Humanities and Social Sciences articles please include page numbers in the in-text citations
 %\bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
@@ -1792,8 +1801,10 @@ ratio = 3.
   \begin{center}
     \includegraphics[scale=.95]{master-incidence_contour-1}
     \end{center}
-  \caption{Total bias for incidence rate according to sensitivity and
-    specificity, for 5\% and 20\% disease prevalence.}
+  \caption{Estimated incidence rate (in cases/animal-time unit) as a
+function of test sensitivity and specificity, disease prevalence (5 or 20\%),
+and true disease incidence (0.01, 0.05, 0.1 case/animal-time unit) when using an
+imperfect test both at baseline and follow-up (i.e.\ total bias).}
   \label{fig:incidence_contour}
 \end{figure}
 
@@ -1801,8 +1812,11 @@ ratio = 3.
   \begin{center}
     \includegraphics[scale=.95]{master-risk_contour-1}
     \end{center}
-  \caption{Total bias for risk ratio according to sensitivity and specificity,
-    for 5\% and 20\% disease prevalence. True risk ratio = 3.}
+  \caption{Estimated risk ratio as a function of test sensitivity and
+    specificity, disease prevalence (5 or 20\%), and true disease incidence
+    (0.01, 0.05, 0.1 case/animal-time unit) for an exposure with a true measure
+    of association corresponding to a risk ratio of \(3.0\) when using an
+    imperfect test both at baseline and follow-up (i.e.\ total bias).}
   \label{fig:incidence_risk}
 \end{figure}
 
@@ -1828,8 +1842,9 @@ ratio = 3.
   \begin{center}
     \includegraphics[scale=.95]{master-RR_Se_PrInc-1}
     \end{center}
-  \caption{Total bias for risk ratio as a function of specificity and disease
-    risk, and for a sensitivity of 95\%. True risk ratio = 3.}
+  \caption{Estimated risk ratio as a function of test specificity and disease
+    risk, and for a sensitivity of 95\%, when using an imperfect test both at
+    baseline and follow-up. True risk ratio = \(3.0\).}
   \label{fig:apparent_RR}
 \end{figure}
 
