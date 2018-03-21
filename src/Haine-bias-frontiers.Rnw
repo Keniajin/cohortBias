@@ -131,7 +131,7 @@ spar <- function(mar = if(!axes)
 
 knitrSet <- function(basename=NULL, w=3.9, h=2.925,
                      fig.align='center', fig.show='hold', fig.pos='htbp',
-                     fig.lp=paste('fig', basename, sep=':'), dev='pdf',
+                     fig.lp=paste('fig', basename, sep=':'), dev=c('pdf','jpeg'),
                      tidy=FALSE, error=FALSE,
                      messages=c('messages.txt', 'console'),
                      width=65, decinline=5, size=NULL,cache=FALSE,
@@ -2434,7 +2434,7 @@ ggplot(total_bias_RR_Se95, aes(x = Sp, y = q50, shape = Inc, colour = Pr,
           plot.caption = element_text(colour = "grey41", size = 6)) +
     labs(x = "Specificity of test", y = "Apparent risk ratio",
          title = "Risk ratio total bias as a function of specificity and disease risk",
-         caption = "Sensitivity = 0.95; True risk ratio = 3") +
+         caption = "Sensitivity = 0.95; True risk ratio = 1.5") +
     theme(panel.grid.major = element_line(size = .2, color = "grey"),
           axis.line = element_line(size = .15, color = "black"))    
 @ 
@@ -2484,21 +2484,50 @@ Engineering Research Council of Canada Discovery Grant.
 \textbf{Figure S1.} Estimated incidence rate as a function of test sensitivity
 and specificity, a disease prevalence of 5\%, and true disease incidence (0.01,
 0.05, 0.1 case/animal-time unit) when using an imperfect test at baseline
-(selection bias) or at follow-up (misclassification bias).
+(selection bias) or at follow-up (misclassification bias). True incidence rate
+is found at the upper right corner (i.e.\ perfect sensitivity and specificity).
 \textbf{Figure S2.} Estimated incidence rate as a function of test sensitivity
 and specificity, a disease prevalence of 20\%, and true disease incidence (0.01,
 0.05, 0.1 case/animal-time unit) when using an imperfect test at baseline
-(selection bias) or at follow-up (misclassification bias).
+(selection bias) or at follow-up (misclassification bias). True incidence rate
+is found at the upper right corner (i.e.\ perfect sensitivity and specificity).
 \textbf{Figure S3.} Estimated risk ratio as a function of test sensitivity and
 specificity, a disease prevalence of 5\%, and true disease incidence (0.01,
 0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
 association corresponding to a risk ratio of \(3.0\) when using an imperfect
-test at baseline (selection bias) or at follow-up (misclassification bias).
+test at baseline (selection bias) or at follow-up (misclassification bias). True
+risk ratio is found at the upper right corner (i.e.\ perfect sensitivity and
+specificity).
 \textbf{Figure S4.} Estimated risk ratio as a function of test sensitivity and
 specificity, a disease prevalence of 20\%, and true disease incidence (0.01,
 0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
 association corresponding to a risk ratio of \(3.0\) when using an imperfect
-test at baseline (selection bias) or at follow-up (misclassification bias).
+test at baseline (selection bias) or at follow-up (misclassification bias). True
+risk ratio is found at the upper right corner (i.e.\ perfect sensitivity and
+specificity).
+\textbf{Figure S5.} Estimated risk ratio as a function of test sensitivity and
+specificity, disease prevalence (5 or 20\%), and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
+association corresponding to a risk ratio of \(1.5\) when using an imperfect
+test both at baseline and follow-up (i.e.\ total bias). True risk ratio is found
+at the upper right corner (i.e.\ perfect sensitivity and specificity).
+\textbf{Figure S6.} Estimated risk ratio as a function of test specificity and
+disease risk, and for a sensitivity of 95\%, when using an imperfect test both
+at baseline and follow-up. True risk ratio = \(1.5\).
+\textbf{Figure S7.} Estimated risk ratio as a function of test sensitivity and
+specificity, a disease prevalence of 5\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
+association corresponding to a risk ratio of \(1.5\) when using an imperfect
+test at baseline (selection bias) or at follow-up (misclassification bias). True
+risk ratio is found at the upper right corner (i.e.\ perfect sensitivity and
+specificity).
+\textbf{Figure S8.} Estimated risk ratio as a function of test sensitivity and
+specificity, a disease prevalence of 20\%, and true disease incidence (0.01,
+0.05, 0.1 case/animal-time unit) for an exposure with a true measure of
+association corresponding to a risk ratio of \(1.5\) when using an imperfect
+test at baseline (selection bias) or at follow-up (misclassification bias). True
+risk ratio is found at the upper right corner (i.e.\ perfect sensitivity and
+specificity).
 
 \bibliographystyle{frontiersinSCNS_ENG_HUMS} % for Science, Engineering and Humanities and Social Sciences articles, for Humanities and Social Sciences articles please include page numbers in the in-text citations
 %\bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
@@ -2522,7 +2551,9 @@ test at baseline (selection bias) or at follow-up (misclassification bias).
   \caption{Estimated incidence rate (in cases/animal-time unit) as a
 function of test sensitivity and specificity, disease prevalence (5 or 20\%),
 and true disease incidence (0.01, 0.05, 0.1 case/animal-time unit) when using an
-imperfect test both at baseline and follow-up (i.e.\ total bias).}
+imperfect test both at baseline and follow-up (i.e.\ total bias). True incidence
+rate is found at the upper right corner (i.e.\ perfect sensitivity and
+specificity).}
   \label{fig:incidence_contour}
 \end{figure}
 
@@ -2534,7 +2565,9 @@ imperfect test both at baseline and follow-up (i.e.\ total bias).}
     specificity, disease prevalence (5 or 20\%), and true disease incidence
     (0.01, 0.05, 0.1 case/animal-time unit) for an exposure with a true measure
     of association corresponding to a risk ratio of \(3.0\) when using an
-    imperfect test both at baseline and follow-up (i.e.\ total bias).}
+    imperfect test both at baseline and follow-up (i.e.\ total bias). True risk
+    ratio is found at the upper right corner (i.e.\ perfect sensitivity and
+    specificity).}
   \label{fig:incidence_risk}
 \end{figure}
 
