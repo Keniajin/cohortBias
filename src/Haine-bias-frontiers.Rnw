@@ -227,6 +227,7 @@ library(reshape2)
 library(stringr)
 library(ggplot2)
 library(directlabels)
+library(RColorBrewer)
 rsession <- sessionInfo()
 rmm <- paste(rsession$R.version$major, rsession$R.version$minor, sep = ".")
 @ 
@@ -306,11 +307,11 @@ misclassification_bias_RR20_10 <- cbind(misclassification_bias_RR20_10,
 <<R_row20_10,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(0.1, .14, .18, .22, .25)) +
-    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0, 0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0, 0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -322,15 +323,15 @@ r <- ggplot(total_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(0.1, seq(.12, .18, .02))) +
-    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0, 0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0, 0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -342,14 +343,14 @@ r <- ggplot(selection_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(seq(0.08, .12, .02), .15, .2, .25)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -361,17 +362,17 @@ r <- ggplot(misclassification_bias_R20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 
 <<RR_row20_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -383,15 +384,16 @@ rr <- ggplot(total_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects",
+                                  colour = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(1.7, 2.6, .3)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(size = 7, angle = 90),
@@ -403,15 +405,16 @@ rr <- ggplot(selection_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects",
+                                  colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(1.4, 2.3, .3)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) + 
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") + 
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -423,7 +426,8 @@ rr <- ggplot(misclassification_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects",
+                                colour = 'darkgreen'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data-load20_01,results='hide',echo=FALSE>>=
@@ -502,11 +506,11 @@ misclassification_bias_RR20_01 <- cbind(misclassification_bias_RR20_01,
 r <- ggplot(total_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
 
     geom_contour(aes(colour = ..level..), breaks = c(.02, seq(.05, .2, .05), .24)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -519,15 +523,15 @@ r <- ggplot(total_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -540,15 +544,15 @@ r <- ggplot(selection_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(.02, .2, .03)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -561,17 +565,17 @@ r <- ggplot(misclassification_bias_R20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 
 <<RR_row20_01,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -584,15 +588,15 @@ rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.4, 1.6, 2, 2.4)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -606,15 +610,15 @@ rr <- ggplot(selection_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.6)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -627,7 +631,7 @@ rr <- ggplot(misclassification_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 <<data-load20_05,results='hide',echo=FALSE>>=
@@ -705,11 +709,11 @@ misclassification_bias_RR20_05 <- cbind(misclassification_bias_RR20_05,
 <<R_row20_05,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.06, seq(.1, .2, .05), .26)) +
-    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -721,14 +725,14 @@ r <- ggplot(total_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -740,14 +744,14 @@ r <- ggplot(selection_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.04, .05, seq(.1, .26, .04))) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -759,7 +763,7 @@ r <- ggplot(misclassification_bias_R20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r20_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @ 
 
 <<RR_row20_05,echo=FALSE,results='hide'>>=
@@ -768,7 +772,7 @@ rr <- ggplot(total_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -780,14 +784,14 @@ rr <- ggplot(total_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", color = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(seq(1.6, 2.8, .4), 3)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(size = 7, angle = 90),
@@ -799,14 +803,14 @@ rr <- ggplot(selection_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(seq(1.2, 2, .4), 3)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -818,7 +822,7 @@ rr <- ggplot(misclassification_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr20_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data-load5_01,results='hide',echo=FALSE>>=
@@ -895,11 +899,11 @@ misclassification_bias_RR05_01 <- cbind(misclassification_bias_RR05_01,
 <<R_row05_01,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.02, .05, .1, .15, .2)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -913,15 +917,15 @@ r <- ggplot(total_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_01t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -935,15 +939,15 @@ r <- ggplot(selection_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_01s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(.02, .2, .03)) +
-    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.01", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -956,17 +960,17 @@ r <- ggplot(misclassification_bias_R05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_01m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 
 <<RR_row05_01,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.5)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -979,15 +983,15 @@ rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_01t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -1001,15 +1005,15 @@ rr <- ggplot(selection_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_01s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 2)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -1022,7 +1026,7 @@ rr <- ggplot(misclassification_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_01m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data-load05_05,results='hide',echo=FALSE>>=
@@ -1099,11 +1103,11 @@ misclassification_bias_RR05_05 <- cbind(misclassification_bias_RR05_05,
 <<R_row05_05,echo=FALSE,results='hide'>>=
 r <- ggplot(total_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.06, .1, .15, .2, .24)) +
-    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.05", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1115,14 +1119,14 @@ r <- ggplot(total_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_05t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(.05, .065, .005)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1134,14 +1138,14 @@ r <- ggplot(selection_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_05s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.04, seq(.05, .2, .05))) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1153,17 +1157,17 @@ r <- ggplot(misclassification_bias_R05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_05m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 
 <<RR_row05_05,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4, 2.8)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1175,15 +1179,15 @@ rr <- ggplot(total_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_05t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(2.2, 2.3, 2.4, 2.6, 2.8, 2.9)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1195,15 +1199,15 @@ rr <- ggplot(selection_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_05s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.4, 1.6, 2)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1215,7 +1219,7 @@ rr <- ggplot(misclassification_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_05m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data-load05_10,results='hide',echo=FALSE>>=
@@ -1295,7 +1299,7 @@ r <- ggplot(total_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1307,15 +1311,15 @@ r <- ggplot(total_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_10t <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(selection_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.105, .11, .116)) +
-    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "0.1", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1327,14 +1331,14 @@ r <- ggplot(selection_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_10s <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                               fill = "transparent", "draw.rects"))
+                               fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 r <- ggplot(misclassification_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(.08, .1, .14, .18, .22, .26)) +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1346,17 +1350,17 @@ r <- ggplot(misclassification_bias_R05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 r05_10m <- direct.label(r, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 
 <<RR_row05_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.2, 1.5, 2, 2.4)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1368,15 +1372,15 @@ rr <- ggplot(total_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_10t <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(selection_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = seq(2.3, 2.7, .1)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -1388,15 +1392,15 @@ rr <- ggplot(selection_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_10s <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkgreen'))
 
 rr <- ggplot(misclassification_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.4, 1.6, 2, 2.4)) +
-    annotate("text", x = 1, y = 1, label = "3", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "3", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Greens")[9:6]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1408,7 +1412,7 @@ rr <- ggplot(misclassification_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
           axis.line = element_line(size = .15, color = "black"))
 rr05_10m <- direct.label(rr, list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkgreen'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1762,11 +1766,11 @@ misclassification_bias_RR20_10 <- cbind(misclassification_bias_RR20_10,
 <<RR15_row20_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.15, 1.2, 1.25)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1779,15 +1783,15 @@ rr <- ggplot(total_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_10t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.25, 1.3, 1.35, 1.4)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(size = 7, angle = 90),
@@ -1800,15 +1804,15 @@ rr <- ggplot(selection_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_10s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.15, 1.25, 1.35)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) + 
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") + 
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1821,7 +1825,7 @@ rr <- ggplot(misclassification_bias_RR20_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_10m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkorange'))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data15-load20_01,results='hide',echo=FALSE>>=
@@ -1866,11 +1870,11 @@ misclassification_bias_RR20_01 <- cbind(misclassification_bias_RR20_01,
 <<RR15_row20_01,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.05, 1.1)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -1884,15 +1888,15 @@ rr <- ggplot(total_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_01t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.15, 1.2)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -1907,15 +1911,15 @@ rr <- ggplot(selection_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_01s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.025, 1.05)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -1929,7 +1933,7 @@ rr <- ggplot(misclassification_bias_RR20_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_01m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", color = 'darkorange'))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data15-load20_05,results='hide',echo=FALSE>>=
@@ -1974,11 +1978,11 @@ misclassification_bias_RR20_05 <- cbind(misclassification_bias_RR20_05,
 <<RR15_row20_05,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.05, 1.1, 1.15)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -1991,15 +1995,15 @@ rr <- ggplot(total_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_05t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.15, 1.2, 1.25, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(size = 7, angle = 90),
@@ -2012,15 +2016,15 @@ rr <- ggplot(selection_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_05s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.2, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -2033,7 +2037,7 @@ rr <- ggplot(misclassification_bias_RR20_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_20_05m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkorange'))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data15-load5_01,results='hide',echo=FALSE>>=
@@ -2078,11 +2082,11 @@ misclassification_bias_RR05_01 <- cbind(misclassification_bias_RR05_01,
 <<RR15_row05_01,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.05, 1.1, 1.2, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -2097,15 +2101,15 @@ rr <- ggplot(total_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_01t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.15, 1.2, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -2120,15 +2124,15 @@ rr <- ggplot(selection_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_01s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.05, 1.1, 1.15)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.title = element_text(size = 8, face = "bold"),
           plot.subtitle = element_text(size = 7, face = "bold"),
@@ -2142,7 +2146,7 @@ rr <- ggplot(misclassification_bias_RR05_01, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_01m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkorange'))
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data15-load05_05,results='hide',echo=FALSE>>=
@@ -2187,11 +2191,11 @@ misclassification_bias_RR05_05 <- cbind(misclassification_bias_RR05_05,
 <<RR15_row05_05,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.2, 1.25)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -2204,15 +2208,15 @@ rr <- ggplot(total_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_05t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.3, 1.35, 1.4)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -2225,15 +2229,15 @@ rr <- ggplot(selection_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_05s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.2, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -2246,7 +2250,7 @@ rr <- ggplot(misclassification_bias_RR05_05, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_05m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkorange'))
 @ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 <<data15-load05_10,results='hide',echo=FALSE>>=
@@ -2291,11 +2295,11 @@ misclassification_bias_RR05_10 <- cbind(misclassification_bias_RR05_10,
 <<RR15_row05_10,echo=FALSE,results='hide'>>=
 rr <- ggplot(total_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.2, 1.3)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -2308,15 +2312,15 @@ rr <- ggplot(total_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_10t <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(selection_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.4, 1.45)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_text(angle = 90, size = 7),
@@ -2329,15 +2333,15 @@ rr <- ggplot(selection_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_10s <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                   cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                  fill = "transparent", "draw.rects"))
+                                  fill = "transparent", "draw.rects", colour = 'darkorange'))
 
 rr <- ggplot(misclassification_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
     geom_contour(aes(colour = ..level..), breaks = c(1.1, 1.2, 1.3, 1.35)) +
-    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5) +
+    annotate("text", x = 1, y = 1, label = "1.5", size = 2.5, color = "grey48") +
     scale_x_continuous(breaks = seq(0.65, 1, .05), expand = c(0,0)) +
     scale_y_continuous(breaks = seq(0.75, 1, .05), expand = c(0,0)) +
     coord_fixed(ylim = c(0.75, 1.025), xlim = c(0.65, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
+    scale_colour_gradientn(guide = 'none', colours = brewer.pal(9,"Oranges")[6:9]) +
     theme_bw() +
     theme(plot.subtitle = element_text(size = 7, face = "bold"),
           axis.title.y = element_blank(),
@@ -2350,7 +2354,7 @@ rr <- ggplot(misclassification_bias_RR05_10, aes(x = Se, y = Sp, z = q50)) +
 rr15_05_10m <- direct.label(rr,
                             list("far.from.others.borders", "calc.boxes", "enlarge.box", 
                                 cex = .55, hjust=1, vjust=-.5, box.color = NA,
-                                fill = "transparent", "draw.rects"))
+                                fill = "transparent", "draw.rects", colour = 'darkorange'))
 @ 
 
 <<risk15_contour,w=8,h=8,echo=FALSE,results='hide',include=FALSE>>=
@@ -2576,7 +2580,8 @@ specificity).}
     \includegraphics[scale=.95]{master-dohoo5_incidence-1}
     \end{center}
   \caption{Apparent incidence resulting from total bias, as a function of
-    specificity. Disease prevalence = 5\%.}
+    specificity. Disease prevalence = 5\%. Solid line: median value; dotted
+    lines: first and third quartiles.}
   \label{fig:apparent_incidence_5}
 \end{figure}
 
@@ -2585,7 +2590,8 @@ specificity).}
     \includegraphics[scale=.95]{master-dohoo20_incidence-1}
     \end{center}
   \caption{Apparent incidence resulting from total bias, as a function of
-    specificity. Disease prevalence = 20\%.}
+    specificity. Disease prevalence = 20\%. Solid line: median value; dotted
+    lines: first and third quartiles.}
   \label{fig:apparent_incidence_20}
 \end{figure}
 
