@@ -60,4 +60,8 @@ null value, even with near perfect diagnosis.
 
 * Running
 
-=bias_analysis.R= is the source file for running the simulations.
+- =bias_analysis.R= is the source file for running the simulations.
+- Simulated data for the paper are available under =data= directory.
+- =Haine-bias-frontiers.Rnw= is the source file for the /Frontiers in Veterinary
+  Sciences/ paper. It uses the already simulated data found under =data=
+  directory and produces the graphics found under =src/graphics=.
