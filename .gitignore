@@ -5,9 +5,9 @@
 .#*
 
 # no remains from tex processing
-*.bib
+# *.bib
 *.brf
-*.pdf
+# *.pdf
 *.aux
 *.bbl
 *.blg
@@ -30,7 +30,7 @@ messages.txt
 
 # no rda files
 *.rda
-*.Rdata
+# *.Rdata
 
 # nothing from cache directory when using knitr
 /src/cache/
